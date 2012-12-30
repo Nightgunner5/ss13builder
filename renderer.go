@@ -33,7 +33,9 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 						e := fmt.Errorf("No tile image: (%d, %d, %d) %q", uint32(x)+zl.Start.X, uint32(y)+zl.Start.Y, zl.Start.Z, ins)
 						f, err := os.Open("tiles" + ins.String() + ".png")
 						if err != nil {
-							return nil, e
+							//return nil, e
+							fmt.Println(e)
+							continue
 						}
 						ti, err := png.Decode(f)
 						f.Close()
