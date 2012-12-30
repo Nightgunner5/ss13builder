@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"image/png"
 	"io"
 	"os"
 	"strconv"
@@ -129,12 +130,27 @@ func main() {
 		fmt.Println("Error opening map: ", err)
 		return
 	}
-	defer f.Close()
-	_, err = Parse(f)
+	m, err := Parse(f)
+	f.Close()
 	if err != nil {
 		fmt.Println("Error parsing map: ", err)
 		return
 	}
-	fmt.Println("It's all working!")
 
+	images, err := Render(m)
+	if err != nil {
+		fmt.Println("Error rendering map: ", err)
+		return
+	}
+
+	for i, img := range images {
+		f, err := os.Create(fmt.Sprintf("%s-zl%d.png", os.Args[1], i+1))
+		if err != nil {
+			fmt.Println("Error saving zlevels: ", err)
+			return
+		}
+		png.Encode(f, img)
+		f.Close()
+	}
+	fmt.Println("It all worked!")
 }
