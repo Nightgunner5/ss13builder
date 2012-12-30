@@ -26,6 +26,7 @@ func Parse(r io.Reader) (*Map, error) {
 	m.Types = make(map[string]TileType)
 
 	var cz *ZLevel
+	var keyLen int
 
 	for {
 		line, err := in.ReadSlice('\n')
@@ -40,13 +41,19 @@ func Parse(r io.Reader) (*Map, error) {
 			line = line[:len(line)-1]
 		}
 		switch {
-		case stage == 0 && len(line) > 8 && line[0] == '"' &&
-			line[4] == '"' && line[5] == ' ' && line[6] == '=' &&
-			line[7] == ' ' && line[8] == '(' &&
-			line[len(line)-1] == ')':
+		case stage == 0 && len(line) > 8 && line[0] == '"' && line[len(line)-1] == ')':
+			for i := 1; i < len(line) && line[i] != '"'; i++ {
+				keyLen++
+			}
+			stage++
+			fallthrough
+		case stage == 1 && len(line) > 8 && line[0] == '"' && line[len(line)-1] == ')':
+			if !(line[keyLen+1] == '"' && line[keyLen+2] == ' ' && line[keyLen+3] == '=' && line[keyLen+4] == ' ' && line[keyLen+5] == '(') {
+				return nil, fmt.Errorf("Unparseable line: %s")
+			}
 			var tt TileType
-			tt.Key = string(line[1:4])
-			line = line[9 : len(line)-1]
+			tt.Key = string(line[1 : keyLen+1])
+			line = line[keyLen+6 : len(line)-1]
 
 			for i := 0; i < len(line); i++ {
 				if line[i] == ',' {
@@ -58,19 +65,19 @@ func Parse(r io.Reader) (*Map, error) {
 			tt.Instances = append(tt.Instances, parseInstance(line))
 			m.Types[tt.Key] = tt
 
-		case stage == 0 && len(line) == 0:
+		case stage == 1 && len(line) == 0:
 			stage++
 
-		case stage == 3 && len(line) == 0:
+		case stage == 4 && len(line) == 0:
 			cz = nil
 
-		case (stage == 1 || stage == 3) && len(line) > 11 && line[0] == '(' &&
+		case (stage == 2 || stage == 4) && len(line) > 11 && line[0] == '(' &&
 			line[len(line)-1] == '"' && line[len(line)-2] == '{' &&
 			line[len(line)-3] == ' ' && line[len(line)-4] == '=' &&
 			line[len(line)-5] == ' ' && line[len(line)-6] == ')':
-			stage = 2
+			stage = 3
 
-			coords := bytes.SplitN(line[1:len(line) - 6], []byte{','}, 3)
+			coords := bytes.SplitN(line[1:len(line)-6], []byte{','}, 3)
 			x, err := strconv.ParseUint(string(coords[0]), 10, 32)
 			if err != nil {
 				return nil, err
@@ -89,23 +96,23 @@ func Parse(r io.Reader) (*Map, error) {
 			})
 			cz = &m.ZLevels[len(m.ZLevels)-1]
 
-		case stage == 2 && len(line) != 0 && len(line) % 3 == 0:
+		case stage == 3 && len(line) == 2 && line[0] == '"' && line[1] == '}':
+			stage++
+
+		case stage == 3 && len(line)%keyLen == 0:
 			var row []string
-			for i := 0; len(line) != 0; i, line = i + 1, line[3:] {
-				key := m.Types[string(line[:3])].Key
+			for i := 0; len(line) != 0; i, line = i+1, line[keyLen:] {
+				key := m.Types[string(line[:keyLen])].Key
 				row = append(row, key)
 			}
 			cz.Map = append(cz.Map, row)
 
-		case stage == 2 && len(line) == 2 && line[0] == '"' && line[1] == '}':
-			stage++
-
 		default:
-			return nil, fmt.Errorf("Unparsed line: %q", line)
+			return nil, fmt.Errorf("Unparsed line:%d: %q", stage, line)
 		}
 	}
 
-	if stage != 3 {
+	if stage != 4 {
 		return nil, fmt.Errorf("Unexpected EOF: %d", stage)
 	}
 

@@ -1,7 +1,7 @@
 package main
 
 type Map struct {
-	Types map[string]TileType
+	Types   map[string]TileType
 	ZLevels []ZLevel
 }
 
@@ -15,7 +15,7 @@ type ZLevel struct {
 }
 
 type Instance struct {
-	Path string
+	Path  string
 	Extra string
 }
 
@@ -46,4 +46,3 @@ func (tt TileType) String() string {
 	buf = append(buf, '"', '\r', '\n')
 	return string(buf)
 }
-
