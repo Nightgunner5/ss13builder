@@ -1,5 +1,9 @@
 package main
 
+import (
+	"strings"
+)
+
 type Map struct {
 	Types   map[string]TileType
 	ZLevels []ZLevel
@@ -17,6 +21,32 @@ type ZLevel struct {
 type Instance struct {
 	Path  string
 	Extra string
+}
+
+func (i Instance) ParseExtra() map[string]string {
+	if i.Extra == "" {
+		return nil
+	}
+	m := make(map[string]string)
+	extra := strings.Split(i.Extra[1:len(i.Extra)-1], "; ")
+	for _, prop := range extra {
+		pieces := strings.SplitN(prop, " = ", 2)
+		m[pieces[0]] = m[pieces[1]]
+	}
+	return m
+}
+
+func (i Instance) SpritePath() string {
+	extra := i.ParseExtra()
+	dir, icon_state := extra["dir"], extra["icon_state"]
+	if dir == "" {
+		dir = "0"
+	}
+	if icon_state == "" {
+		icon_state = "\"default\""
+	}
+	icon_state = icon_state[1 : len(icon_state)-1]
+	return "tiles" + i.Path + "/" + icon_state + "_" + dir + ".png"
 }
 
 func (i Instance) String() string {
