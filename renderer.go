@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"image/png"
+	"os"
+	"strings"
 )
 
 func Render(m *Map) (images []*image.RGBA, err error) {
@@ -21,10 +24,24 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 			for x, t := range row {
 				tt := m.Types[t]
 				for _, ins := range tt.Instances {
+					if strings.HasPrefix(ins.Path, "/area") {
+						continue
+					}
 					if ti, ok := tileImg[ins.Path]; ok {
 						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.ZP, draw.Over)
 					} else {
-						return nil, fmt.Errorf("No tile image: (%d, %d, %d) %q", uint32(x)+zl.Start.X, uint32(y)+zl.Start.Y, zl.Start.Z, ins)
+						e := fmt.Errorf("No tile image: (%d, %d, %d) %q", uint32(x)+zl.Start.X, uint32(y)+zl.Start.Y, zl.Start.Z, ins)
+						f, err := os.Open("tiles" + ins.String() + ".png")
+						if err != nil {
+							return nil, e
+						}
+						ti, err := png.Decode(f)
+						f.Close()
+						if err != nil {
+							return nil, e
+						}
+						tileImg[ins.Path] = ti
+						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.ZP, draw.Over)
 					}
 				}
 			}
