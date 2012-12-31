@@ -7,8 +7,23 @@ import (
 	"image/png"
 	"io"
 	"os"
+	"sort"
 	"strconv"
 )
+
+type sortInstances []Instance
+
+func (s sortInstances) Len() int {
+	return len(s)
+}
+
+func (s sortInstances) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+
+func (s sortInstances) Less(i, j int) bool {
+	return s[i].Layer() < s[j].Layer()
+}
 
 func parseInstance(b []byte) (ins Instance) {
 	if i := bytes.IndexByte(b, '{'); i != -1 {
@@ -64,6 +79,7 @@ func Parse(r io.Reader) (*Map, error) {
 				}
 			}
 			tt.Instances = append(tt.Instances, parseInstance(line))
+			sort.Sort(sortInstances(tt.Instances))
 			m.Types[tt.Key] = tt
 
 		case stage == 1 && len(line) == 0:

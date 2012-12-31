@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"image/color"
 	"image/draw"
 	"image/png"
 	"os"
@@ -11,6 +12,7 @@ import (
 
 func Render(m *Map) (images []*image.RGBA, err error) {
 	tileImg := make(map[string]image.Image)
+	missingTile := image.NewUniform(color.RGBA{255, 0, 255, 255})
 	for _, zl := range m.ZLevels {
 		width, height := 0, len(zl.Map)*32
 		for _, row := range zl.Map {
@@ -24,7 +26,7 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 			for x, t := range row {
 				tt := m.Types[t]
 				for _, ins := range tt.Instances {
-					if strings.HasPrefix(ins.Path, "/area") {
+					if strings.HasPrefix(ins.Path, "/area") || strings.HasPrefix(ins.Path, "/obj/landmark") {
 						continue
 					}
 					path := ins.SpritePath()
@@ -34,7 +36,10 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 						e := fmt.Errorf("No tile image: (%d, %d, %d) %q", uint32(x)+zl.Start.X, uint32(y)+zl.Start.Y, zl.Start.Z, path)
 						f, err := os.Open(path)
 						if err != nil {
-							return nil, e
+							fmt.Println(e)
+							tileImg[path] = missingTile
+							draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), missingTile, image.ZP, draw.Src)
+							continue
 						}
 						ti, err := png.Decode(f)
 						f.Close()

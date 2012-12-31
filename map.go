@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -31,7 +32,7 @@ func (i Instance) ParseExtra() map[string]string {
 	extra := strings.Split(i.Extra[1:len(i.Extra)-1], "; ")
 	for _, prop := range extra {
 		pieces := strings.SplitN(prop, " = ", 2)
-		m[pieces[0]] = m[pieces[1]]
+		m[pieces[0]] = pieces[1]
 	}
 	return m
 }
@@ -51,6 +52,19 @@ func (i Instance) SpritePath() string {
 
 func (i Instance) String() string {
 	return i.Path + i.Extra
+}
+
+func (i Instance) Layer() int {
+	extra := i.ParseExtra()
+	if l := extra["layer"]; l != "" {
+		layer, _ := strconv.ParseInt(l, 10, 64)
+		return int(layer)
+	}
+	switch {
+	case strings.Contains(i.Path, "floor"):
+		return 2
+	}
+	return 3
 }
 
 type TileType struct {
