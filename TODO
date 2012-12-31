@@ -217,12 +217,6 @@ tiles/obj/machinery/atmospherics/valve/digital/valve1_4.png
 tiles/obj/machinery/autolathe/default_0.png
 tiles/obj/machinery/bot/mulebot/default_0.png
 tiles/obj/machinery/bot/secbot/beepsky/default_0.png
-tiles/obj/machinery/camera/default_0.png
-tiles/obj/machinery/camera/default_1.png
-tiles/obj/machinery/camera/default_2.png
-tiles/obj/machinery/camera/default_3.png
-tiles/obj/machinery/camera/default_4.png
-tiles/obj/machinery/camera/default_8.png
 tiles/obj/machinery/cell_charger/default_0.png
 tiles/obj/machinery/chem_dispenser/default_0.png
 tiles/obj/machinery/chem_master/default_0.png
