@@ -71,11 +71,18 @@ func Parse(r io.Reader) (*Map, error) {
 			tt.Key = string(line[1 : keyLen+1])
 			line = line[keyLen+6 : len(line)-1]
 
+			inExtra := false
 			for i := 0; i < len(line); i++ {
-				if line[i] == ',' {
+				if !inExtra && line[i] == ',' {
 					tt.Instances = append(tt.Instances, parseInstance(line[0:i]))
 					line = line[i+1:]
 					i = 0
+				}
+				if line[i] == '{' {
+					inExtra = true
+				}
+				if line[i] == '}' {
+					inExtra = false
 				}
 			}
 			tt.Instances = append(tt.Instances, parseInstance(line))
