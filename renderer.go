@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
+	"math/rand"
 	"os"
 	"strings"
 )
@@ -31,7 +32,7 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 					}
 					path := ins.SpritePath()
 					if ti, ok := tileImg[path]; ok {
-						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.ZP, draw.Over)
+						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.Pt(rand.Intn(ti.Bounds().Max.X/32)*32, 0), draw.Over)
 					} else {
 						e := fmt.Errorf("No tile image: (%d, %d, %d) %q", uint32(x)+zl.Start.X, uint32(y)+zl.Start.Y, zl.Start.Z, path)
 						f, err := os.Open(path)
@@ -39,7 +40,7 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 							fmt.Println(e)
 							tileImg[path] = missingTile
 							draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), missingTile, image.ZP, draw.Src)
-							continue
+							break
 						}
 						ti, err := png.Decode(f)
 						f.Close()
@@ -47,7 +48,7 @@ func Render(m *Map) (images []*image.RGBA, err error) {
 							return nil, e
 						}
 						tileImg[path] = ti
-						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.ZP, draw.Over)
+						draw.Draw(img, image.Rect(x*32, y*32, x*32+32, y*32+32), ti, image.Pt(rand.Intn(ti.Bounds().Max.X/32)*32, 0), draw.Over)
 					}
 				}
 			}
