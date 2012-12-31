@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"image/png"
 	"io"
 	"os"
-	"image/png"
-	"strings"
 	"strconv"
+	"strings"
 )
+
+var DirIndex = []int{2, 1, 4, 8, 6, 10, 5, 9}
 
 func Extract(basedir string, desc io.RuneReader, baseimg image.Image) {
 	var (
@@ -22,7 +24,7 @@ func Extract(basedir string, desc io.RuneReader, baseimg image.Image) {
 	img := func(w io.Writer, stride, count int) {
 		stride *= 32
 		l := left
-		img := image.NewRGBA(image.Rect(0, 0, count * 32, 32))
+		img := image.NewRGBA(image.Rect(0, 0, count*32, 32))
 
 		for i := 0; i < count; i++ {
 			draw.Draw(img, image.Rect(i*32, 0, i*32+32, 32), baseimg, image.Pt(l, 0), draw.Src)
@@ -47,19 +49,19 @@ func Extract(basedir string, desc io.RuneReader, baseimg image.Image) {
 		}
 
 		name := props["state"]
-		name = name[1:len(name)-1]
+		name = name[1 : len(name)-1]
 		count, _ := strconv.ParseUint(props["dirs"], 10, 64)
 		width, _ := strconv.ParseUint(props["frames"], 10, 64)
 
 		_ = width
 
 		for i := uint64(0); i < count; i++ {
-			f, _ := os.Create(fmt.Sprintf("%s/%s_dir%d.png", basedir, name, i))
+			f, _ := os.Create(fmt.Sprintf("%s/%s_%d.png", basedir, name, DirIndex[i]))
 			img(f, int(count), int(width))
 			f.Close()
 			left += 32
 		}
-		left += int((width - 1) * count) * 32
+		left += int((width-1)*count) * 32
 
 		state = nil
 	}

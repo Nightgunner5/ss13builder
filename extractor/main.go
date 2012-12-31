@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"image/png"
 	"os"
 	"strings"
-	"image/png"
 )
 
 func main() {
