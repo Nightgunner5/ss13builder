@@ -254,7 +254,6 @@ tiles/obj/machinery/computer/aiupload/default_0.png
 tiles/obj/machinery/computer/arcade/default_0.png
 tiles/obj/machinery/computer/card/default_0.png
 tiles/obj/machinery/computer/cloning/default_0.png
-tiles/obj/machinery/computer/communications/default_0.png
 tiles/obj/machinery/computer/general_air_control/default_0.png
 tiles/obj/machinery/computer/general_air_control/large_tank_control/default_0.png
 tiles/obj/machinery/computer/general_alert/default_0.png
@@ -368,7 +367,6 @@ tiles/obj/machinery/power/terminal/default_0.png
 tiles/obj/machinery/power/terminal/default_4.png
 tiles/obj/machinery/power/terminal/default_8.png
 tiles/obj/machinery/power/terminal/term_1.png
-tiles/obj/machinery/power/tracker/default_0.png
 tiles/obj/machinery/power/turbine/turbine_4.png
 tiles/obj/machinery/power/turbine/turbine_8.png
 tiles/obj/machinery/recharger/default_0.png
@@ -427,21 +425,6 @@ tiles/obj/secure_closet/security1/default_0.png
 tiles/obj/secure_closet/security2/default_0.png
 tiles/obj/signpost/default_0.png
 tiles/obj/stool/default_0.png
-tiles/obj/table/reinforced/default_0.png
-tiles/obj/table/reinforced/reinf_tabledir_0.png
-tiles/obj/table/reinforced/reinf_tabledir_10.png
-tiles/obj/table/reinforced/reinf_tabledir_5.png
-tiles/obj/table/reinforced/reinf_tabledir_6.png
-tiles/obj/table/reinforced/reinf_tabledir_8.png
-tiles/obj/table/reinforced/reinf_tabledir_9.png
-tiles/obj/table/tabledir_10.png
-tiles/obj/table/tabledir_1.png
-tiles/obj/table/tabledir_2.png
-tiles/obj/table/tabledir_4.png
-tiles/obj/table/tabledir_5.png
-tiles/obj/table/tabledir_6.png
-tiles/obj/table/tabledir_8.png
-tiles/obj/table/tabledir_9.png
 tiles/obj/window/basic/default_0.png
 tiles/obj/window/basic/default_4.png
 tiles/obj/window/basic/default_8.png
