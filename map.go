@@ -41,7 +41,7 @@ func (i Instance) SpritePath() string {
 	extra := i.ParseExtra()
 	dir, icon_state := extra["dir"], extra["icon_state"]
 	if dir == "" {
-		dir = "0"
+		dir = "2"
 	}
 	if icon_state == "" {
 		icon_state = "\"default\""
