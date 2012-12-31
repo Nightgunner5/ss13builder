@@ -335,7 +335,6 @@ tiles/obj/machinery/power/apc/default_8.png
 tiles/obj/machinery/power/monitor/default_0.png
 tiles/obj/machinery/power/smes/default_0.png
 tiles/obj/machinery/power/solar_control/default_0.png
-tiles/obj/machinery/power/solar/default_0.png
 tiles/obj/machinery/power/terminal/default_0.png
 tiles/obj/machinery/power/terminal/default_4.png
 tiles/obj/machinery/power/terminal/default_8.png
@@ -409,7 +408,6 @@ tiles/obj/window/reinforced/west/rwindow_2.png
 tiles/obj/window/reinforced/west/rwindow_4.png
 tiles/turf/simulated/default_0.png
 tiles/turf/simulated/floor/airless/floorgrime_0.png
-tiles/turf/simulated/floor/airless/solarpanel_0.png
 tiles/turf/simulated/floor/arrival_0.png
 tiles/turf/simulated/floor/arrival_10.png
 tiles/turf/simulated/floor/arrival_1.png

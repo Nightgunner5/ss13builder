@@ -63,6 +63,8 @@ func (i Instance) Layer() int {
 	switch {
 	case i.Path == "/turf/space":
 		return 0
+	case i.Path == "/obj/lattice":
+		return 1
 	case strings.Contains(i.Path, "floor"):
 		return 2
 	}
